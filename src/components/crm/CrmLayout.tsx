@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import { MetricsRow } from "./MetricsRow";
+import MetricsRow from "./MetricsRow";
 import { SubNav } from "./SubNav";
+import FiltersBar from "./Filterbar";
 
 export function CrmLayout({
   children,
@@ -18,6 +19,7 @@ export function CrmLayout({
       <Sidebar />
       <div className="flex-1 min-w-0 flex flex-col">
         <Topbar />
+        <FiltersBar />
         {showMetrics && (
           <div className="px-8 pt-6">
             <MetricsRow />

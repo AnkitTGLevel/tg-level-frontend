@@ -1,52 +1,140 @@
-import * as React from "react";
+"use client";
 
-export default function HourlyTable() {
-  const rows = [
-    ["May 14, 8 AM – 10 AM", 300, [210, 70], [100, 33.3], [60, 20], [14, 4.7]],
-    ["10 AM – 12 PM", 340, [240, 70.6], [130, 38.2], [70, 20.6], [16, 4.7]],
-    ["12 PM – 2 PM", 360, [250, 69.4], [140, 38.9], [75, 20.8], [18, 5.0]],
-    ["2 PM – 4 PM", 320, [225, 70.3], [120, 37.5], [68, 21.3], [15, 4.7]],
-    ["4 PM – 6 PM", 280, [200, 71.4], [110, 39.3], [62, 22.1], [13, 4.6]],
-  ] as const;
+import React from "react";
+import { Info, ToggleRight } from "lucide-react";
 
+const rows = [
+  {
+    time: "May 14, 8 AM – 10 AM",
+    leads: "300",
+    contacted: "210",
+    contactedPct: "70.0%",
+    interested: "100",
+    interestedPct: "33.3%",
+    trial: "60",
+    trialPct: "20.0%",
+    paid: "14",
+    paidPct: "4.7%",
+  },
+  {
+    time: "10 AM – 12 PM",
+    leads: "340",
+    contacted: "240",
+    contactedPct: "70.6%",
+    interested: "130",
+    interestedPct: "38.2%",
+    trial: "70",
+    trialPct: "20.6%",
+    paid: "16",
+    paidPct: "4.7%",
+  },
+  {
+    time: "12 PM – 2 PM",
+    leads: "360",
+    contacted: "250",
+    contactedPct: "69.4%",
+    interested: "140",
+    interestedPct: "38.9%",
+    trial: "75",
+    trialPct: "20.8%",
+    paid: "18",
+    paidPct: "5.0%",
+  },
+];
+
+export default function HourlyFunnelData() {
   return (
-    <div className="card-elevated p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[16px] font-bold">Hourly Funnel Data (Last 48H)</h3>
-        <label className="text-[11px] text-muted-foreground flex items-center gap-2">
-          Show % columns
-          <span className="relative inline-flex h-5 w-9 rounded-full bg-primary">
-            <span className="absolute right-0.5 top-0.5 size-4 rounded-full bg-white shadow" />
-          </span>
-        </label>
+    <div className="bg-white rounded-3xl border border-[#E4E1EE] shadow-sm overflow-hidden">
+      {/* Header */}
+      <div className="bg-[#F5F2FF] px-8 py-6 flex items-center justify-between border-b border-[#E4E1EE]">
+        <div className="flex items-center gap-3">
+          <h3 className="text-[#1B1B24] text-2xl font-bold">
+            Hourly Funnel Data (Last 48H)
+          </h3>
+          <Info className="w-5 h-5 text-[#777587]" />
+        </div>
+
+        {/* Toggle */}
+        <div className="flex items-center gap-3">
+          <span className="text-[#464555] text-lg font-medium">Show % Columns</span>
+          <div className="relative">
+            <ToggleRight className="w-14 h-8 text-[#3525CD]" />
+          </div>
+        </div>
       </div>
-      <div className="overflow-x-auto rounded-2xl border border-border">
-        <table className="w-full text-[12px]">
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full">
           <thead>
-            <tr className="bg-secondary/60 text-muted-foreground text-[10px] font-bold tracking-wider">
-              {["Time (2H)", "Leads", "Contacted", "Interested", "Trial Active", "Paid"].map((h) => (
-                <th key={h} className="px-4 py-3 text-left">
-                  {h}
-                </th>
-              ))}
+            <tr className="bg-[#F5F2FF]/70 border-b border-[#E4E1EE]">
+              <th className="text-left pl-8 py-6 text-[#464555] font-medium text-lg w-72">
+                Time (2 Hour)
+              </th>
+              <th className="text-right pr-8 py-6 text-[#3525CD] font-medium text-lg">Leads Created</th>
+              <th className="text-right pr-8 py-6 text-[#3525CD] font-medium text-lg">Contacted</th>
+              <th className="text-right pr-8 py-6 text-[#3525CD] font-medium text-lg">Interested</th>
+              <th className="text-right pr-8 py-6 text-[#3525CD] font-medium text-lg">Trial Active</th>
+              <th className="text-right pr-8 py-6 text-[#3525CD] font-medium text-lg">Paid</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((r, i) => (
-              <tr key={i} className="border-t border-border hover:bg-secondary/30">
-                <td className="px-4 py-3 font-semibold">{r[0]}</td>
-                <td className="px-4 py-3 font-medium">{r[1]}</td>
-                {(r.slice(2) as [number, number][]).map(([v, p], k) => (
-                  <td key={k} className="px-4 py-3">
-                    <span className="font-medium">{v}</span>{" "}
-                    <span className="text-muted-foreground">({p}%)</span>
-                  </td>
-                ))}
+            {rows.map((row, index) => (
+              <tr
+                key={index}
+                className={`border-b border-[#E4E1EE] last:border-none hover:bg-zinc-50 ${
+                  index === 1 ? "bg-[#3525CD0D]" : ""
+                }`}
+              >
+                <td className="pl-8 py-7 text-[#1B1B24] text-xl font-semibold">
+                  {row.time}
+                </td>
+
+                {/* Leads Created */}
+                <td className="text-right pr-8 py-7 text-[#1B1B24] text-xl font-semibold">
+                  {row.leads}
+                  <span className="text-[#464555] text-base ml-1.5">-</span>
+                </td>
+
+                {/* Contacted */}
+                <td className="text-right pr-8 py-7">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[#1B1B24] text-xl font-semibold">{row.contacted}</span>
+                    <span className="text-emerald-600 font-bold text-base">{row.contactedPct}</span>
+                  </div>
+                </td>
+
+                {/* Interested */}
+                <td className="text-right pr-8 py-7">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[#1B1B24] text-xl font-semibold">{row.interested}</span>
+                    <span className="text-emerald-600 font-bold text-base">{row.interestedPct}</span>
+                  </div>
+                </td>
+
+                {/* Trial Active */}
+                <td className="text-right pr-8 py-7">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[#1B1B24] text-xl font-semibold">{row.trial}</span>
+                    <span className="text-emerald-600 font-bold text-base">{row.trialPct}</span>
+                  </div>
+                </td>
+
+                {/* Paid */}
+                <td className="text-right pr-8 py-7">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[#1B1B24] text-xl font-semibold">{row.paid}</span>
+                    <span className="text-emerald-600 font-bold text-base">{row.paidPct}</span>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Bottom Bar */}
+      <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
     </div>
   );
 }
