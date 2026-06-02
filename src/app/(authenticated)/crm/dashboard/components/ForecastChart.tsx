@@ -1,103 +1,240 @@
+"use client";
+
 import * as React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Area,
+  ComposedChart,
+} from "recharts";
+import { Calendar, ChevronDown } from "lucide-react";
 
-export default function ForecastChart() {
-  const w = 720;
-  const h = 260;
-  const days = 30;
-  const forecast = Array.from({ length: days }, (_, i) => 30 + i * 4 + Math.sin(i / 2) * 6);
-  const actual = Array.from({ length: days }, (_, i) =>
-    i < 20 ? 28 + i * 4.4 + Math.cos(i / 3) * 8 : null
-  );
-  const revised = Array.from({ length: days }, (_, i) => 35 + i * 5.2);
+// Generate data matching the Y-axis scale (₹17K to ₹70K)
+const generateChartData = () =>
+  Array.from({ length: 30 }, (_, i) => {
+    const day = i + 1;
+    const forecast = 18500 + day * 1750 + Math.sin(day / 3) * 1500;
+    const actual = day <= 22 ? 17000 + day * 1820 + Math.cos(day / 2.5) * 1800 : null;
+    const revisedRunRate = forecast * 1.07 + Math.sin(day / 4) * 1200;
+    const totalRevenue = forecast * 1.14 + day * 350;
+    return {
+      day,
+      forecast: Math.min(forecast, 71000),
+      actual: actual ? Math.min(actual, 69000) : null,
+      revisedRunRate: Math.min(revisedRunRate, 75000),
+      totalRevenue: Math.min(totalRevenue, 79000),
+    };
+  });
 
-  const maxY = 200;
-  const x = (i: number) => (i / (days - 1)) * (w - 60) + 50;
-  const y = (v: number) => h - 30 - (v / maxY) * (h - 60);
+const data = generateChartData();
 
-  const path = (arr: (number | null)[]) =>
-    arr
-      .map((v, i) => (v == null ? null : `${i === 0 ? "M" : "L"} ${x(i)} ${y(v)}`))
-      .filter(Boolean)
-      .join(" ");
-
-  return (
-    <div className="col-span-2 card-elevated p-6">
-      <div className="flex items-start justify-between mb-1">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-[16px] font-bold">Forecast vs Actual</h3>
-            <span className="text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-md bg-primary/10 text-primary">
-              PHASE 1 · FROZEN MEMORY
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload?.length) {
+    return (
+      <div className="bg-white border border-[#C7C4D8] rounded-md p-2 shadow-md min-w-[140px]">
+        <p className="text-[#565E74] text-[10px] font-medium mb-1">Day {label}</p>
+        {payload.map((entry: any, idx: number) => (
+          <div key={idx} className="flex items-center gap-1.5 text-[10px] mb-0.5">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: entry.color }} />
+            <span className="text-[#464555]">{entry.name}:</span>
+            <span className="text-[#1B1B24] font-medium">
+              ₹{(entry.value / 1000).toFixed(0)}K
             </span>
           </div>
-          <p className="text-[12px] text-muted-foreground mt-1">May 2026 · Daily view</p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+export default function ForecastChart() {
+  return (
+    <div className="w-full bg-white rounded-2xl shadow-sm border border-[#C7C4D880] overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-wrap justify-between items-center gap-3 p-4 border-b border-[#C7C4D84D]">
+        <div className="flex items-center gap-2 flex-wrap">
+          <h2 className="text-base md:text-lg font-semibold text-[#1B1B24]">
+            FORECAST VS ACTUAL GRAPH
+          </h2>
+          <span className="text-[9px] font-medium px-2 py-0.5 rounded-full bg-[#F5F2FF] text-[#3525CD] border border-[#3525CD33]">
+            PHASE 1 • FROZEN MEMORY
+          </span>
         </div>
-        <button className="h-8 px-3 rounded-lg text-[11px] font-semibold border border-border bg-card hover:bg-accent">
-          Freeze Forecast
+        <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F5F2FF] text-[#565E74] text-xs font-medium rounded-md border border-[#C7C4D8] hover:bg-[#EAE6F4]">
+          <Calendar className="w-3 h-3" /> Freeze Forecast
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-3">
-        {["Equity", "Swing", "Nifty", "Commodities", "Repeat Sales"].map((t, i) => (
-          <span
-            key={t}
-            className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${
-              i === 0
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground"
+      {/* Filters row */}
+      <div className="flex flex-wrap justify-between items-center gap-3 p-4 border-b border-[#C7C4D833] bg-white/50">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#565E74] text-[9px] font-medium">FORECAST MONTH</span>
+            <div className="flex items-center gap-1 px-2 py-1 bg-white border border-[#C7C4D8] rounded-md">
+              <span className="text-[#1B1B24] text-xs font-normal">May, 2026</span>
+              <ChevronDown className="w-2.5 h-2.5 text-[#565E74]" />
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#565E74] text-[9px] font-medium">HISTORICAL VIEW</span>
+            <div className="flex items-center gap-1 px-2 py-1 bg-white border border-[#C7C4D8] rounded-md">
+              <span className="text-[#1B1B24] text-xs font-normal">2026-05 frozen forecast</span>
+              <ChevronDown className="w-2.5 h-2.5 text-[#565E74]" />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[#565E74] text-[9px] font-medium">VIEW</span>
+          <div className="flex bg-[#F5F2FF] rounded-md border border-[#C7C4D8] p-0.5">
+            {["Daily", "Weekly", "Monthly"].map((v) => (
+              <button
+                key={v}
+                className={`px-3 py-0.5 text-[10px] font-medium rounded ${
+                  v === "Daily" ? "bg-[#3525CD] text-white" : "text-[#565E74]"
+                }`}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Filter pills */}
+      <div className="flex flex-wrap items-center gap-2 p-4">
+        <span className="text-[#565E74] text-[9px] font-medium">FILTERS</span>
+        {["Equity", "Swing", "Nifty", "Commodities", "Repeat Sales"].map((f, idx) => (
+          <button
+            key={f}
+            className={`px-2.5 py-0.5 text-[10px] font-medium rounded-full ${
+              idx === 0
+                ? "bg-[#3525CD] text-white"
+                : "bg-[#F5F2FF] text-[#565E74] border border-[#C7C4D8]"
             }`}
           >
-            {t}
-          </span>
+            {f}
+          </button>
         ))}
       </div>
 
-      <svg viewBox={`0 0 ${w} ${h}`} className="w-full mt-4">
-        <defs>
-          <linearGradient id="fillActual" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#7C3AED" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {[0, 1, 2, 3, 4].map((i) => (
-          <line
-            key={i}
-            x1={50}
-            x2={w - 10}
-            y1={30 + i * 50}
-            y2={30 + i * 50}
-            stroke="oklch(0.92 0.01 255)"
-            strokeDasharray="3 4"
-          />
-        ))}
-        <path
-          d={`${path(actual)} L ${x(19)} ${h - 30} L ${x(0)} ${h - 30} Z`}
-          fill="url(#fillActual)"
-        />
-        <path d={path(forecast)} stroke="#22D3EE" strokeWidth="2.5" fill="none" strokeDasharray="6 4" />
-        <path d={path(revised)} stroke="#FB923C" strokeWidth="2.5" fill="none" />
-        <path d={path(actual)} stroke="#7C3AED" strokeWidth="3" fill="none" />
-        {actual.map((v, i) =>
-          v != null ? <circle key={i} cx={x(i)} cy={y(v)} r="3" fill="#7C3AED" /> : null
-        )}
-      </svg>
+      {/* Chart */}
+      <div className="w-full px-4 pb-2">
+        <ResponsiveContainer width="100%" height={320}>
+          <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
+            <CartesianGrid strokeDasharray="2 2" stroke="#E5E7EB" vertical={false} />
+            <XAxis
+              dataKey="day"
+              tick={{ fontSize: 9, fill: "#737686" }}
+              tickLine={false}
+              axisLine={{ stroke: "#C7C4D8", strokeWidth: 1 }}
+              domain={[1, 30]}
+              ticks={[1, 5, 9, 13, 17, 21, 25, 29]}
+            />
+            <YAxis
+              tick={{ fontSize: 9, fill: "#737686" }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`}
+              domain={[0, 80000]}
+              ticks={[17000, 35000, 52000, 70000]}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend
+              wrapperStyle={{ paddingTop: "8px" }}
+              iconType="circle"
+              iconSize={8}
+              formatter={(v) => <span className="text-[#464555] text-[9px]">{v}</span>}
+            />
+            <Line
+              type="monotone"
+              dataKey="forecast"
+              name="Forecast Line"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Area
+              type="monotone"
+              dataKey="actual"
+              name="Actual Line"
+              stroke="#10B981"
+              strokeWidth={2}
+              fill="#10B98120"
+              dot={{ r: 2.5, fill: "#10B981", strokeWidth: 1, stroke: "#fff" }}
+            />
+            <Line
+              type="monotone"
+              dataKey="revisedRunRate"
+              name="Revised Run-rate"
+              stroke="#F59E0B"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="totalRevenue"
+              name="Total Revenue"
+              stroke="#EF4444"
+              strokeWidth={2}
+              dot={false}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
 
-      <div className="grid grid-cols-4 gap-3 mt-4">
-        {[
-          { label: "Original Target", val: "₹2,03,226", note: "Stable Baseline", grad: "grad-cyan" },
-          { label: "Revised Target", val: "₹2,84,614", note: "+40.0% Adjustment", grad: "grad-orange" },
-          { label: "Actual Revenue", val: "₹26,00,020", note: "MTD Cumulative", grad: "grad-mint" },
-          { label: "Variance", val: "-₹10,31,745", note: "Critical Deficit", grad: "grad-pink" },
-        ].map((s) => (
-          <div key={s.label} className="rounded-2xl p-3 border border-border bg-secondary/60">
-            <div className={`size-2 rounded-full ${s.grad}`} />
-            <div className="text-[10px] font-bold tracking-wider text-muted-foreground mt-2">
-              {s.label}
-            </div>
-            <div className="text-[16px] font-bold mt-1">{s.val}</div>
-            <div className="text-[10px] text-muted-foreground">{s.note}</div>
+      {/* 4 KPI Cards – exactly as per your second image */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+        {/* Original Target */}
+        <div className="rounded-lg p-3 bg-[#F5F2FF4D] border border-[#C7C4D81A]">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-[#06B6D4]" />
+            <span className="text-[#565E74] text-[10px] font-semibold tracking-wide">ORIGINAL TARGET</span>
           </div>
-        ))}
+          <div className="text-base md:text-lg font-bold text-[#1B1B24] mb-1">Rs 2,03,226</div>
+          <div className="text-[9px] text-[#737686]">Stable Baseline</div>
+        </div>
+
+        {/* Revised Target */}
+        <div className="rounded-lg p-3 bg-[#F5F2FF4D] border border-[#C7C4D81A]">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-[#F97316]" />
+            <span className="text-[#565E74] text-[10px] font-semibold tracking-wide">REVISED TARGET</span>
+          </div>
+          <div className="text-base md:text-lg font-bold text-[#1B1B24] mb-1">Rs 2,84,614</div>
+          <div className="text-[9px] text-[#737686]">+40.0% Adjustment</div>
+        </div>
+
+        {/* Actual Revenue */}
+        <div className="rounded-lg p-3 bg-[#F5F2FF4D] border border-[#C7C4D81A]">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-[#10B981]" />
+            <span className="text-[#565E74] text-[10px] font-semibold tracking-wide">ACTUAL REVENUE</span>
+          </div>
+          <div className="text-base md:text-lg font-bold text-[#1B1B24] mb-1">Rs 26,00,020</div>
+          <div className="text-[9px] text-[#737686]">MTD Cumulative</div>
+        </div>
+
+        {/* Variance */}
+        <div className="rounded-lg p-3 bg-[#F5F2FF4D] border border-[#C7C4D81A]">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-[#EF4444]" />
+            <span className="text-[#565E74] text-[10px] font-semibold tracking-wide">VARIANCE</span>
+          </div>
+          <div className="text-base md:text-lg font-bold text-[#EF4444] mb-1">-Rs 10,31,745</div>
+          <div className="text-[9px] text-[#737686]">Critical Deficit</div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="border-t border-[#C7C4D84D] px-4 py-2 text-right">
+        <span className="text-[#777587] text-[9px] italic">Ask to edit</span>
       </div>
     </div>
   );

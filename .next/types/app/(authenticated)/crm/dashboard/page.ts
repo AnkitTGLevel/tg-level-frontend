@@ -1,4 +1,4 @@
-// File: C:\Users\a2z\Desktop\tglevels-ui-kit\src\app\(authenticated)\crm\dashboard\page.tsx
+// File: C:\Users\a2z\Desktop\tg-level-frontend\src\app\(authenticated)\crm\dashboard\page.tsx
 import * as entry from '../../../../../../src/app/(authenticated)/crm/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
