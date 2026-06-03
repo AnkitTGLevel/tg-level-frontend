@@ -6,7 +6,7 @@ import Image from "next/image";
 import {
   Search, Phone, Video, ChevronLeft, ChevronRight,
   MoreHorizontal, Send, Bold, Italic, Underline,
-  Link as LinkIcon, Smile, List, AlignLeft, Undo, Redo,
+  Link as LinkIcon,   Image as ImageIcon,Smile, List, AlignLeft, Undo, Redo,
   Strikethrough, CheckCircle, Activity, RefreshCw,
   Clock, Bell, Settings, Plus, Hash, FileText,
   AlertTriangle, MessageSquare, Filter, Calendar,
@@ -294,8 +294,7 @@ function ChatTopbar() {
                 width={40}
                 height={40}
                 className="object-cover w-full h-full"
-                onErrorCapture={() => setLogoError(true)} // ✅ Changed from onError
-              />
+                onErrorCapture={() => setLogoError(true)}               />
             ) : (
               // Fallback if image fails
               <span className="text-white font-bold text-base">TG</span>
@@ -1079,7 +1078,7 @@ function ChatUI() {
               <div className="flex items-center gap-1 text-gray-400">
                 {[Bold, Italic, Underline, Strikethrough].map((Icon, i) => <button key={i} className="hover:text-gray-600 p-0.5 transition-colors"><Icon className="w-3 h-3" /></button>)}
                 <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
-                {[LinkIcon, Image, Smile, List, AlignLeft].map((Icon, i) => <button key={i} className="hover:text-gray-600 p-0.5 transition-colors"><Icon className="w-3 h-3" /></button>)}
+                {[LinkIcon, ImageIcon, Smile, List, AlignLeft].map((Icon, i) => <button key={i} className="hover:text-gray-600 p-0.5 transition-colors"><Icon className="w-3 h-3" /></button>)}
                 <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
                 {[Undo, Redo].map((Icon, i) => <button key={i} className="hover:text-gray-600 p-0.5 transition-colors"><Icon className="w-3 h-3" /></button>)}
               </div>
