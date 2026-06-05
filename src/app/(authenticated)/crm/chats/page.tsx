@@ -508,23 +508,10 @@ function CollapsibleSection({
 // RIGHT PANEL CONTENT — WITH INDEPENDENT SCROLLING
 // ─────────────────────────────────────────────────────────────────────────────
 function RightPanelContent({ rightTab }: { rightTab: string }) {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(["meta", "status", "mood", "callStatus"])
-  );
-
-  const toggleSection = (id: string) => {
-    const newSet = new Set(expandedSections);
-    if (newSet.has(id)) {
-      newSet.delete(id);
-    } else {
-      newSet.add(id);
-    }
-    setExpandedSections(newSet);
-  };
-
   if (rightTab === "Insights") {
     return (
       <div className="flex flex-col gap-4 p-4 h-full overflow-y-auto">
+        {/* Lead Engagement Score */}
         <div className="bg-gradient-to-br from-[#3525CD] to-[#2910B9] rounded-xl p-4 text-white flex-shrink-0">
           <p className="text-xs font-bold mb-2">Lead Engagement Score</p>
           <div className="flex items-baseline gap-2">
@@ -537,28 +524,7 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
           <p className="text-[10px] mt-2 opacity-80">Based on chat frequency and response time</p>
         </div>
 
-        {/* <div className="bg-[#F3F3FE] rounded-xl p-4 border border-[#E0D9FF] flex-shrink-0">
-          <p className="text-[#191B23] text-[11px] font-bold mb-3">Interaction Metrics</p>
-          <div className="space-y-3">
-            {[
-              { label: "Messages Sent", value: "24", trend: "+12%" },
-              { label: "Response Rate", value: "94%", trend: "+5%" },
-              { label: "Avg Response Time", value: "2.5 min", trend: "-30%" },
-              { label: "Last Interaction", value: "10 mins ago", trend: "Live" },
-            ].map((metric, i) => (
-              <div key={i} className="flex justify-between items-center py-2 border-b border-white/50 last:border-0">
-                <span className="text-[#737686] text-[10px]">{metric.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-[#191B23] text-[11px] font-bold">{metric.value}</span>
-                  <span className={`text-[9px] font-bold ${metric.trend.includes("+") ? "text-emerald-600" : "text-orange-600"}`}>
-                    {metric.trend}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
-
+        {/* Recommended Actions */}
         <div className="bg-[#F3F3FE] rounded-xl p-4 border border-[#E0D9FF] flex-shrink-0">
           <p className="text-[#191B23] text-[11px] font-bold mb-3">Recommended Actions</p>
           <div className="space-y-2">
@@ -575,14 +541,10 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             ))}
           </div>
         </div>
-        {/* Call Status Section */}
-      <CollapsibleSection
-        id="callStatus"
-        title="Call Status"
-        isExpanded={expandedSections.has("callStatus")}
-        onToggle={() => toggleSection("callStatus")}
-      >
-        <div className="px-4 py-3">
+
+        {/* Call Status */}
+        <div className="flex-shrink-0">
+          <p className="text-[#191B23] text-[11px] font-bold mb-2 px-1">Call Status</p>
           <div className="bg-orange-50 border border-orange-200 rounded-xl py-3 px-3 flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-orange-500 rounded-full" />
@@ -595,16 +557,10 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             </button>
           </div>
         </div>
-      </CollapsibleSection>
 
-      {/* Calls Summary Section */}
-      <CollapsibleSection
-        id="callSummary"
-        title="Calls Summary"
-        isExpanded={expandedSections.has("callSummary")}
-        onToggle={() => toggleSection("callSummary")}
-      >
-        <div className="px-4 py-3">
+        {/* Calls Summary */}
+        <div className="flex-shrink-0">
+          <p className="text-[#191B23] text-[11px] font-bold mb-2 px-1">Calls Summary</p>
           <div className="flex flex-wrap gap-2">
             {[
               ["Call Done", "3", "emerald"],
@@ -625,63 +581,56 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             ))}
           </div>
         </div>
-      </CollapsibleSection>
 
-
-      {/* Notes Section */}
-      <CollapsibleSection
-        id="notes"
-        title="Notes & Comments"
-        isExpanded={expandedSections.has("notes")}
-        onToggle={() => toggleSection("notes")}
-      >
-        <div className="px-4 py-3 space-y-3">
-          {[
-            {
-              badge: "CONVERTED",
-              badgeBg: "#D0E1FB",
-              badgeText: "#54647A",
-              time: "Just Now",
-              text: "User converted after understanding the product benefits and confirming solution matches requirements."
-            },
-            {
-              badge: "INTERESTED",
-              badgeBg: "#E8D5FF",
-              badgeText: "#5A3E8C",
-              time: "2 hours ago",
-              text: "User showed interest in 3-month plan after comparing with competitors."
-            },
-            {
-              badge: "FOLLOW UP",
-              badgeBg: "#FFE4D0",
-              badgeText: "#7D2D00",
-              time: "Yesterday",
-              text: "Scheduled follow-up call to address remaining concerns about risk management."
-            }
-          ].map((note, i) => (
-            <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:border-[#3525CD33] transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <span
-                  className="text-[8px] font-bold px-2 py-0.5 rounded-lg"
-                  style={{ background: note.badgeBg, color: note.badgeText }}
-                >
-                  {note.badge}
-                </span>
-                <span className="text-[9px] text-[#737686]">{note.time}</span>
+        {/* Notes & Comments */}
+        <div className="flex-shrink-0">
+          <p className="text-[#191B23] text-[11px] font-bold mb-2 px-1">Notes & Comments</p>
+          <div className="space-y-3">
+            {[
+              {
+                badge: "CONVERTED",
+                badgeBg: "#D0E1FB",
+                badgeText: "#54647A",
+                time: "Just Now",
+                text: "User converted after understanding the product benefits and confirming solution matches requirements."
+              },
+              {
+                badge: "INTERESTED",
+                badgeBg: "#E8D5FF",
+                badgeText: "#5A3E8C",
+                time: "2 hours ago",
+                text: "User showed interest in 3-month plan after comparing with competitors."
+              },
+              {
+                badge: "FOLLOW UP",
+                badgeBg: "#FFE4D0",
+                badgeText: "#7D2D00",
+                time: "Yesterday",
+                text: "Scheduled follow-up call to address remaining concerns about risk management."
+              }
+            ].map((note, i) => (
+              <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:border-[#3525CD33] transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <span
+                    className="text-[8px] font-bold px-2 py-0.5 rounded-lg"
+                    style={{ background: note.badgeBg, color: note.badgeText }}
+                  >
+                    {note.badge}
+                  </span>
+                  <span className="text-[9px] text-[#737686]">{note.time}</span>
+                </div>
+                <p className="text-[#464555] text-[10px] leading-relaxed">{note.text}</p>
               </div>
-              <p className="text-[#464555] text-[10px] leading-relaxed">{note.text}</p>
+            ))}
+            <div className="pt-2 border-t border-gray-200">
+              <input
+                type="text"
+                placeholder="Add a note..."
+                className="w-full text-[10px] px-3 py-2 border border-gray-200 rounded-lg outline-none focus:border-[#3525CD]"
+              />
             </div>
-          ))}
-          <div className="pt-2 border-t border-gray-200">
-            <input
-              type="text"
-              placeholder="Add a note..."
-              className="w-full text-[10px] px-3 py-2 border border-gray-200 rounded-lg outline-none focus:border-[#3525CD]"
-            />
           </div>
         </div>
-      </CollapsibleSection>
-      
       </div>
     );
   }
@@ -689,7 +638,9 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
   if (rightTab === "Timeline") {
     return (
       <div className="flex flex-col gap-3 p-4 h-full overflow-y-auto">
-        <p className="text-[#191B23] text-[11px] font-bold mb-2 sticky top-0 bg-white py-2">Activity Timeline</p>
+        <p className="text-[#191B23] text-[11px] font-bold mb-2 sticky top-0 bg-white py-2 z-10">
+          Activity Timeline
+        </p>
         <div className="space-y-3">
           {[
             { time: "Today, 11:15 AM", event: "Payment Intent Shown", type: "success", icon: "✓" },
@@ -719,18 +670,34 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
       </div>
     );
   }
+  // Flat section block — title + content, no toggle
+function SectionBlock({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="px-4 py-3">
+      <p className="text-[#191B23] text-[11px] font-bold mb-3">{title}</p>
+      {children}
+    </div>
+  );
+}
 
-  // Default: Lead Info Tab with Independent Scrolling
+// Thin divider between sections
+function Divider() {
+  return <div className="h-px bg-gray-100 mx-4" />;
+}
+
+  // Default: Lead Info Tab — all sections flat, no collapsible
   return (
     <div className="flex flex-col gap-0 h-full overflow-y-auto">
-      {/* Lead Meta Section */}
-      <CollapsibleSection
-        id="meta"
-        title="Lead Information"
-        isExpanded={expandedSections.has("meta")}
-        onToggle={() => toggleSection("meta")}
-      >
-        <div className="flex items-start justify-between px-4 py-3">
+
+      {/* ── Lead Information ── */}
+      <SectionBlock title="Lead Information">
+        <div className="flex items-start justify-between">
           <div className="flex flex-col gap-2 text-[11px] flex-1">
             {[
               ["Source", "Instagram", "#3525CD"],
@@ -740,9 +707,7 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             ].map(([label, val, col]) => (
               <div key={label as string} className="flex gap-2 justify-between">
                 <span className="text-[#737686] font-bold">{label}</span>
-                <span className="font-bold" style={{ color: col as string }}>
-                  {val}
-                </span>
+                <span className="font-bold" style={{ color: col as string }}>{val}</span>
               </div>
             ))}
           </div>
@@ -752,16 +717,13 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             <span className="text-[9px] font-bold text-orange-500 mt-1">🔥 Very Hot</span>
           </div>
         </div>
-      </CollapsibleSection>
+      </SectionBlock>
 
-      {/* Status Section */}
-      <CollapsibleSection
-        id="status"
-        title="Status & Activity"
-        isExpanded={expandedSections.has("status")}
-        onToggle={() => toggleSection("status")}
-      >
-        <div className="flex flex-col gap-2.5 px-4 py-3">
+      <Divider />
+
+      {/* ── Status & Activity ── */}
+      <SectionBlock title="Status & Activity">
+        <div className="flex flex-col gap-2.5">
           {[
             ["App Installed", "Yes ✓", "#10B981"],
             ["Community Joined", "Joined ✓", "#10B981"],
@@ -770,140 +732,48 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
           ].map(([label, val, col]) => (
             <div key={label as string} className="flex justify-between text-[11px]">
               <span className="text-[#737686]">{label}</span>
-              <span className="font-bold" style={{ color: col as string }}>
-                {val}
-              </span>
+              <span className="font-bold" style={{ color: col as string }}>{val}</span>
             </div>
           ))}
         </div>
-      </CollapsibleSection>
+      </SectionBlock>
 
-      {/* Mood Section */}
-      <CollapsibleSection
-        id="mood"
-        title="AI Sentiment Analysis"
-        isExpanded={expandedSections.has("mood")}
-        onToggle={() => toggleSection("mood")}
-      >
-        <div className="px-4 py-3">
-          <div className="flex items-center bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-3 gap-3">
-            <span className="text-3xl">😊</span>
-            <div className="flex-1">
-              <p className="text-emerald-600 text-xs font-bold">Very Happy & Engaged</p>
-              <p className="text-[#737686] text-[9px] mt-0.5">
-                Lead showing high interest and positive sentiment in conversations
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 flex gap-2">
-            <div className="flex-1">
-              <p className="text-[9px] text-[#737686] font-bold mb-1">Sentiment Score</p>
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500 rounded-full" style={{ width: "87%" }} />
-              </div>
-              <p className="text-[9px] text-[#737686] mt-1">87/100</p>
-            </div>
-            <div className="flex-1">
-              <p className="text-[9px] text-[#737686] font-bold mb-1">Engagement Level</p>
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div className="h-full bg-orange-500 rounded-full" style={{ width: "75%" }} />
-              </div>
-              <p className="text-[9px] text-[#737686] mt-1">75/100</p>
-            </div>
+      <Divider />
+
+      {/* ── AI Sentiment Analysis ── */}
+      <SectionBlock title="AI Sentiment Analysis">
+        <div className="flex items-center bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-3 gap-3">
+          <span className="text-3xl">😊</span>
+          <div className="flex-1">
+            <p className="text-emerald-600 text-xs font-bold">Very Happy & Engaged</p>
+            <p className="text-[#737686] text-[9px] mt-0.5">
+              Lead showing high interest and positive sentiment in conversations
+            </p>
           </div>
         </div>
-      </CollapsibleSection>
-
-      {/* Call Status Section
-      <CollapsibleSection
-        id="callStatus"
-        title="Call Status"
-        isExpanded={expandedSections.has("callStatus")}
-        onToggle={() => toggleSection("callStatus")}
-      >
-        <div className="px-4 py-3">
-          <div className="bg-orange-50 border border-orange-200 rounded-xl py-3 px-3 flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-500 rounded-full" />
-              <p className="text-[#943700] text-[10px] font-bold">Call Pending</p>
+        <div className="mt-3 flex gap-2">
+          <div className="flex-1">
+            <p className="text-[9px] text-[#737686] font-bold mb-1">Sentiment Score</p>
+            <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-emerald-500 rounded-full" style={{ width: "87%" }} />
             </div>
-            <p className="text-[#737686] text-[10px]">Next call scheduled for:</p>
-            <p className="text-[#191B23] text-[11px] font-bold">Today, 12:00 PM</p>
-            <button className="mt-2 bg-orange-500 text-white text-[10px] font-bold py-2 rounded-lg hover:bg-orange-600 transition-colors">
-              Initiate Call Now
-            </button>
+            <p className="text-[9px] text-[#737686] mt-1">87/100</p>
+          </div>
+          <div className="flex-1">
+            <p className="text-[9px] text-[#737686] font-bold mb-1">Engagement Level</p>
+            <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-orange-500 rounded-full" style={{ width: "75%" }} />
+            </div>
+            <p className="text-[9px] text-[#737686] mt-1">75/100</p>
           </div>
         </div>
-      </CollapsibleSection> */}
+      </SectionBlock>
 
-      {/* Calls Summary Section
-      <CollapsibleSection
-        id="callSummary"
-        title="Calls Summary"
-        isExpanded={expandedSections.has("callSummary")}
-        onToggle={() => toggleSection("callSummary")}
-      >
-        <div className="px-4 py-3">
-          <div className="flex flex-wrap gap-2">
-            {[
-              ["Call Done", "3", "emerald"],
-              ["Hanged Up", "1", "red"],
-              ["Missed", "0", "gray"],
-              ["Call Pending", "1", "orange"],
-              ["Ringing", "1", "blue"]
-            ].map(([label, count, color]) => (
-              <div key={label} className={`text-[9px] px-3 py-2 rounded-lg border font-bold ${
-                color === "emerald" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
-                color === "red" ? "bg-red-50 text-red-700 border-red-200" :
-                color === "orange" ? "bg-orange-50 text-orange-700 border-orange-200" :
-                color === "blue" ? "bg-blue-50 text-blue-700 border-blue-200" :
-                "bg-gray-50 text-gray-700 border-gray-200"
-              }`}>
-                {label}: <span className="ml-1">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CollapsibleSection> */}
+      <Divider />
 
-      {/* Recent Calls Section
-      <CollapsibleSection
-        id="recentCalls"
-        title="Recent Call History"
-        isExpanded={expandedSections.has("recentCalls")}
-        onToggle={() => toggleSection("recentCalls")}
-      >
-        <div className="px-4 py-3">
-          <div className="space-y-2">
-            {recentCalls.map((call, i) => (
-              <div key={i} className="bg-gray-50 rounded-lg p-2.5 border border-gray-200 hover:border-[#3525CD33] transition-colors">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-bold text-[#191B23]">{call.mode}</span>
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ color: call.statusColor, background: call.statusColor + "18" }}>
-                    {call.status}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] text-[#737686]">{call.time}</span>
-                  <span className="text-[9px] font-bold text-[#191B23]">{call.duration}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button className="w-full mt-3 text-[#3525CD] text-[10px] font-bold py-2 hover:bg-[#F5F2FF] rounded-lg transition-colors">
-            View All Calls →
-          </button>
-        </div>
-      </CollapsibleSection> */}
-
-      {/* Agent Assignment Section */}
-      <CollapsibleSection
-        id="agent"
-        title="Agent Assignment"
-        isExpanded={expandedSections.has("agent")}
-        onToggle={() => toggleSection("agent")}
-      >
-        <div className="px-4 py-3 space-y-2.5">
+      {/* ── Agent Assignment ── */}
+      <SectionBlock title="Agent Assignment">
+        <div className="flex flex-col gap-2.5">
           {[
             ["Assigned Agent", "Amit Kumar"],
             ["Assigned By", "Team Lead Sarah"],
@@ -916,53 +786,44 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             </div>
           ))}
         </div>
-      </CollapsibleSection>
+      </SectionBlock>
 
-      {/* Client Tags Section */}
-      <CollapsibleSection
-        id="tags"
-        title="Client Tags"
-        isExpanded={expandedSections.has("tags")}
-        onToggle={() => toggleSection("tags")}
-      >
-        <div className="px-4 py-3">
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-3">
-            <div>
-              <p className="text-gray-700 text-[9px] font-bold mb-2">Applied Tags:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {["Hot Lead", "Pricing Discussed", "Interested"].map(tag => (
-                  <span key={tag} className="bg-white border border-gray-200 text-gray-800 text-[9px] font-bold py-1 px-2.5 rounded-md">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+      <Divider />
+
+      {/* ── Client Tags ── */}
+      <SectionBlock title="Client Tags">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-3">
+          <div>
+            <p className="text-gray-700 text-[9px] font-bold mb-2">Applied Tags:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {["Hot Lead", "Pricing Discussed", "Interested"].map(tag => (
+                <span key={tag} className="bg-white border border-gray-200 text-gray-800 text-[9px] font-bold py-1 px-2.5 rounded-md">
+                  {tag}
+                </span>
+              ))}
             </div>
-            <div className="pt-2 border-t border-gray-200">
-              <p className="text-gray-700 text-[9px] font-bold mb-2">Add New Tag:</p>
-              <div className="flex gap-1.5">
-                <input
-                  type="text"
-                  placeholder="Type tag name..."
-                  className="flex-1 text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg outline-none focus:border-[#3525CD]"
-                />
-                <button className="bg-[#3525CD] text-white px-3 py-1.5 rounded-lg hover:bg-[#2910B9] transition-colors">
-                  <Plus className="w-3 h-3" />
-                </button>
-              </div>
+          </div>
+          <div className="pt-2 border-t border-gray-200">
+            <p className="text-gray-700 text-[9px] font-bold mb-2">Add New Tag:</p>
+            <div className="flex gap-1.5">
+              <input
+                type="text"
+                placeholder="Type tag name..."
+                className="flex-1 text-[10px] px-2 py-1.5 border border-gray-200 rounded-lg outline-none focus:border-[#3525CD]"
+              />
+              <button className="bg-[#3525CD] text-white px-3 py-1.5 rounded-lg hover:bg-[#2910B9] transition-colors">
+                <Plus className="w-3 h-3" />
+              </button>
             </div>
           </div>
         </div>
-      </CollapsibleSection>
+      </SectionBlock>
 
+      <Divider />
 
-      {/* Last Seen Trades Section */}
-      <CollapsibleSection
-        id="trades"
-        title="Last Seen Trades"
-        isExpanded={expandedSections.has("trades")}
-        onToggle={() => toggleSection("trades")}
-      >
-        <div className="px-4 py-3 space-y-3">
+      {/* ── Last Seen Trades ── */}
+      <SectionBlock title="Last Seen Trades">
+        <div className="space-y-3">
           {trades.map((trade, i) => (
             <TradeCard key={i} trade={trade} />
           ))}
@@ -978,7 +839,8 @@ function RightPanelContent({ rightTab }: { rightTab: string }) {
             </div>
           </div>
         </div>
-      </CollapsibleSection>
+      </SectionBlock>
+
     </div>
   );
 }
@@ -1092,7 +954,20 @@ function ChatUI() {
       </div>
 
       {/* ── RIGHT: Lead info panel — INDEPENDENT SCROLLING ────────────────────────────── */}
-      <div className="shrink-0 flex flex-col bg-white w-[340px] border-l border-gray-100 overflow-hidden">
+    <div
+  className="
+    shrink-0
+    flex
+    flex-col
+    bg-white
+    w-[340px]
+    border-l
+    border-gray-100
+    sticky
+    top-0
+    h-screen
+  "
+>
         {/* Tab Navigation — STICKY */}
         <div className="flex border-b border-gray-100 bg-white sticky top-0 z-10 shadow-sm shrink-0">
           {["lead info", "Insights", "Timeline"].map(t => (
@@ -1114,9 +989,16 @@ function ChatUI() {
         </div>
 
         {/* Content Area — INDEPENDENT SCROLLING */}
-        <div className="flex-1 overflow-hidden">
-          <RightPanelContent rightTab={rightTab} />
-        </div>
+        <div
+  className="
+    flex-1
+    overflow-y-auto
+    overflow-x-hidden
+    custom-scrollbar
+  "
+>
+  <RightPanelContent rightTab={rightTab} />
+</div>
       </div>
     </div>
   );
