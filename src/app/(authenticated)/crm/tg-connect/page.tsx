@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 import { Hash, Search, Paperclip, Smile, Send, BarChart3, Mic, FileText, Users } from "lucide-react";
 
 const channels = [

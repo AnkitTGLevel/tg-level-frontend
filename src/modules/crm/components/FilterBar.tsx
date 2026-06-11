@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, X, Calendar } from "lucide-react";
-import { useFilters } from "./FilterContext";
+import { useFilters } from "@/modules/crm/context/FilterContext";
 import { format } from "date-fns";
 
 export default function FiltersBar() {

@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useFilters, generateMetrics, FilterProvider } from "@/components/crm/FilterContext";
+import { useFilters, generateMetrics, FilterProvider } from "@/modules/crm/context/FilterContext";
 import { format } from "date-fns";
 
 type Tab = "DAILY" | "MONTHLY" | "QUARTERLY";

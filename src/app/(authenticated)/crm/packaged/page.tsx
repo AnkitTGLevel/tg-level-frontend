@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 
 const plans = [
   { name: "Starter", price: "₹4,999", users: "1 trader", color: "grad-cyan", features: ["Daily signals", "Community access", "1 strategy"] },

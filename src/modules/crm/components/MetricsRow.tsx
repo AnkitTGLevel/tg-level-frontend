@@ -3,7 +3,7 @@
 import * as React from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useFilters, generateMetrics } from "./FilterContext";
+import { useFilters, generateMetrics } from "@/modules/crm/context/FilterContext";
 
 interface MetricCard {
   label: string;

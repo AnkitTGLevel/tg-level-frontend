@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 import ForecastChart from "./components/ForecastChart";
 import IntelligencePanel from "./components/IntelligencePanel";
 import ConversionFunnel from "./components/ConversionFunnel";

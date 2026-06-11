@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 import { Clock } from "lucide-react";
 
 export default function PaymentPendingPage() {

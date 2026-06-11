@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { CrmLayout } from "@/components/crm/CrmLayout";
+import { CrmLayout } from "@/components/layout/CrmLayout";
 import { Phone, MessageSquare, PhoneIncoming, PhoneOutgoing, PhoneMissed } from "lucide-react";
 
 const calls = [

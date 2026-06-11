@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import MetricsRow from "./MetricsRow";
+import MetricsRow from "@/modules/crm/components/MetricsRow";
 import { SubNav } from "./SubNav";
-import FiltersBar from "./FilterBar";
+import FiltersBar from "@/modules/crm/components/FilterBar";
 import { ArrowUpRight } from "lucide-react";
-import { FilterProvider } from "./FilterContext";
+import { FilterProvider } from "@/modules/crm/context/FilterContext";
 
 function RealTimeFunnelHeader() {
   return (
