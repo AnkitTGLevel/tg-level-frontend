@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, X, Calendar } from "lucide-react";
+import { 
+  ChevronDown, 
+  X, 
+  Calendar, 
+  CalendarClock, 
+  GitCompareArrows, 
+  Users, 
+  UserCheck, 
+  Globe 
+} from "lucide-react";
 import { useFilters } from "@/modules/crm/context/FilterContext";
 import { format } from "date-fns";
 
@@ -26,6 +35,7 @@ export default function FiltersBar() {
   const filterConfigs = [
     {
       label: "TIMEFRAME",
+      icon: Calendar,
       value: formatTimeframe(),
       valueColor: "text-[#3525CD]",
       valueBold: true,
@@ -40,6 +50,7 @@ export default function FiltersBar() {
     },
     {
       label: "DATE BASIS",
+      icon: CalendarClock,
       value: filters?.dateBasis || "Lead Created",
       valueColor: "text-[#1B1B24]",
       valueBold: false,
@@ -54,6 +65,7 @@ export default function FiltersBar() {
     },
     {
       label: "COMPARISON",
+      icon: GitCompareArrows,
       value: filters?.comparison?.value || "Prev 7 Days",
       valueColor: "text-[#1B1B24]",
       valueBold: false,
@@ -63,6 +75,7 @@ export default function FiltersBar() {
     },
     {
       label: "TEAM LEAD",
+      icon: Users,
       value: filters?.teamLead || "All Leads",
       valueColor: "text-[#1B1B24]",
       valueBold: false,
@@ -77,6 +90,7 @@ export default function FiltersBar() {
     },
     {
       label: "ASSIGNMENT",
+      icon: UserCheck,
       value: filters?.assignment || "All Agents",
       valueColor: "text-[#1B1B24]",
       valueBold: false,
@@ -91,6 +105,7 @@ export default function FiltersBar() {
     },
     {
       label: "SOURCE",
+      icon: Globe,
       value: filters?.source || "All Sources",
       valueColor: "text-[#1B1B24]",
       valueBold: false,
@@ -112,9 +127,14 @@ export default function FiltersBar() {
       <div className="grid grid-cols-6 gap-3">
         {filterConfigs.map((filter) => (
           <div key={filter.label} className="flex flex-col gap-1.5 relative">
-            {/* Label row */}
+            {/* Label row with colored icon (no background) */}
             <div className="flex items-center px-0.5">
-              <div className="w-2.5 h-2.5 mr-1.5 rounded-sm bg-[#565E74] opacity-50" />
+              <filter.icon 
+                size={12} 
+                className="mr-1.5" 
+                strokeWidth={1.5}
+                style={{ color: "#3525CDB2" }}
+              />
               <span className="text-[10px] font-semibold text-[#565E74] mr-1.5">
                 {filter.label}
               </span>
@@ -194,6 +214,7 @@ export default function FiltersBar() {
                 borderColor: "#3525CD33",
               }}
             >
+              <Calendar size={10} className="text-[#3525CD]" strokeWidth={1.5} />
               <span className="text-[12px] font-semibold" style={{ color: "#3525CD" }}>
                 {formatTimeframe()}
               </span>
@@ -210,6 +231,7 @@ export default function FiltersBar() {
                   borderColor: "#C7C4D8",
                 }}
               >
+                <GitCompareArrows size={10} className="text-[#464555]" strokeWidth={1.5} />
                 <span className="text-[12px] font-semibold" style={{ color: "#464555" }}>
                   Vs. {activeFilters.comparison.value}
                 </span>
